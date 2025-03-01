@@ -1,5 +1,6 @@
-from products import Product
+from products import Product, LimitedProduct, NonStockedProduct
 from store import Store
+
 
 def print_menu():
 
@@ -84,6 +85,8 @@ def print_total_price(total_price):
 
     if total_price is None:
         print("You didn't choose any of product. Order is not made.")
+    if isinstance(total_price, str):
+        print(total_price)
     elif isinstance(total_price, int):
         print('*' * 10)
         print(f"Order made! Total payment: ${total_price}")
@@ -91,9 +94,15 @@ def print_total_price(total_price):
 
 def main():
     # setup initial stock of inventory
+    # product_list = [Product("MacBook Air M2", price=1450, quantity=100),
+    #                 Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+    #                 Product("Google Pixel 7", price=500, quantity=250)
+    #                 ]
     product_list = [Product("MacBook Air M2", price=1450, quantity=100),
                     Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-                    Product("Google Pixel 7", price=500, quantity=250)
+                    Product("Google Pixel 7", price=500, quantity=250),
+                    NonStockedProduct("Windows License", price=125),
+                    LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
                     ]
     best_buy = Store(product_list)
     while True:
@@ -102,18 +111,17 @@ def main():
         user_action = input('Enter choice (1-4): ')
         if user_action == '1':
             Store.list_all_products(products)
-        if user_action == '2':
+        elif user_action == '2':
             Store.show_total_amount_in_store(products)
-        if user_action == '3':
+        elif user_action == '3':
             total_price = make_an_order(products, best_buy)
             print_total_price(total_price)
-        if user_action == '4':
+        elif user_action == '4':
             print('Bye!')
             break
         else:
             print('Invalid choice')
-            print_menu()
-            user_action = input('Enter choice (1-4): ')
+
 
 
 if __name__ == '__main__':

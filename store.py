@@ -1,4 +1,5 @@
-from products import Product
+from products import Product, LimitedProduct
+
 
 class Store:
 
@@ -113,7 +114,9 @@ class Store:
         for order_item in shopping_list:
             product, quantity = order_item
             item_price = product.buy(quantity)
+            if isinstance(product, LimitedProduct) and item_price is None:
+                return f"Order was partially made. Only 1 item is allowed for the {product.name}"
             if item_price is None:
-                return 'Impossible to make the order.'
+                return 'Order was partially made.'
             total_price += item_price
         return total_price

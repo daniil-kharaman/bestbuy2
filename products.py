@@ -112,3 +112,47 @@ class Product:
         if self.validate_quantity_in_stock(quantity):
             self.set_quantity(quantity)
             return quantity * self.price
+
+
+class NonStockedProduct(Product):
+    def __init__(self, name, price):
+        super().__init__(name, price, 0)
+
+
+    def buy(self, quantity):
+        return quantity * self.price
+
+
+    def show(self):
+
+        """Prints full info of product"""
+
+        print(f"{self.name}, Price: {self.price}")
+
+
+    def validate_quantity_in_stock(self, quantity):
+
+        """Validates if it is enough of product in stock"""
+
+        return True
+
+
+class LimitedProduct(Product):
+    def __init__(self, name, price, quantity, maximum):
+        super().__init__(name, price, quantity)
+        self.maximum = maximum
+
+
+    def buy(self, quantity):
+        if quantity > self.maximum:
+            return
+        if self.validate_quantity_in_stock(quantity):
+            self.set_quantity(quantity)
+            return quantity * self.price
+
+
+    def show(self):
+
+        """Prints full info of product"""
+
+        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, Maximum: {self.maximum}")
