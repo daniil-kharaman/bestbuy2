@@ -1,5 +1,4 @@
 import pytest
-from store import Store
 from products import Product
 
 def test_create_product():

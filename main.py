@@ -1,5 +1,6 @@
 from products import Product, LimitedProduct, NonStockedProduct
 from store import Store
+from promotions import ThirdOneFree, PercentDiscount, SecondHalfPrice
 
 
 def print_menu():
@@ -104,6 +105,17 @@ def main():
                     NonStockedProduct("Windows License", price=125),
                     LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
                     ]
+
+    # Create promotion catalog
+    second_half_price = SecondHalfPrice("Second Half price!")
+    third_one_free = ThirdOneFree("Third One Free!")
+    thirty_percent = PercentDiscount("30% off!", percent=30)
+
+    # Add promotions to products
+    product_list[0].promotion = second_half_price
+    product_list[1].promotion = third_one_free
+    product_list[3].promotion = thirty_percent
+
     best_buy = Store(product_list)
     while True:
         products = best_buy.get_all_products()

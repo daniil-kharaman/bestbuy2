@@ -1,3 +1,5 @@
+from promotions import Promotion
+
 class Product:
 
     def __init__(self, name, price, quantity):
@@ -6,6 +8,7 @@ class Product:
         self.quantity = Product.validate_quantity(quantity)
         self.active = ''
         self.activate()
+        self._promotion = None
 
 
     def validate_name(name: str):
@@ -83,11 +86,21 @@ class Product:
         self.active = False
 
 
+    def _get_print_info(self):
+
+        """Return the information about thr product"""
+
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}"
+
+
     def show(self):
 
         """Prints full info of product"""
 
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        print_info = self._get_print_info()
+        if self.promotion is not None:
+            print_info += f", Promotion: {self.promotion}"
+        print(print_info)
 
 
     def validate_quantity_in_stock(self, quantity):
@@ -111,7 +124,29 @@ class Product:
 
         if self.validate_quantity_in_stock(quantity):
             self.set_quantity(quantity)
+            if self._promotion is not None:
+                price_with_promotion = self.promotion.apply_promotion(product=self, quantity=quantity)
+                return round(price_with_promotion)
             return quantity * self.price
+
+
+    @property
+    def promotion(self):
+
+        """Returns the promotion"""
+
+        return self._promotion
+
+
+    @promotion.setter
+    def promotion(self, new_promotion):
+
+        """Changes the promotion"""
+
+        if not isinstance(new_promotion, Promotion):
+            raise ValueError('The promotion must be an instance of the Promotion class')
+        else:
+            self._promotion = new_promotion
 
 
 class NonStockedProduct(Product):
@@ -120,20 +155,17 @@ class NonStockedProduct(Product):
 
 
     def buy(self, quantity):
+        if self._promotion is not None:
+            price_with_promotion = self.promotion.apply_promotion(product=self, quantity=quantity)
+            return round(price_with_promotion)
         return quantity * self.price
 
 
-    def show(self):
-
-        """Prints full info of product"""
-
-        print(f"{self.name}, Price: {self.price}")
+    def _get_print_info(self):
+        return f"{self.name}, Price: {self.price}"
 
 
     def validate_quantity_in_stock(self, quantity):
-
-        """Validates if it is enough of product in stock"""
-
         return True
 
 
@@ -146,13 +178,8 @@ class LimitedProduct(Product):
     def buy(self, quantity):
         if quantity > self.maximum:
             return
-        if self.validate_quantity_in_stock(quantity):
-            self.set_quantity(quantity)
-            return quantity * self.price
+        super().buy(quantity)
 
 
-    def show(self):
-
-        """Prints full info of product"""
-
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, Maximum: {self.maximum}")
+    def _get_print_info(self):
+        return f"{self.name}, Price: {self.price}, Quantity: {self.quantity}, Maximum: {self.maximum}"
