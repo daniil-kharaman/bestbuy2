@@ -88,17 +88,12 @@ def print_total_price(total_price):
         print("You didn't choose any of product. Order is not made.")
     if isinstance(total_price, str):
         print(total_price)
-    elif isinstance(total_price, int):
+    elif isinstance(total_price, (int, float)):
         print('*' * 10)
         print(f"Order made! Total payment: ${total_price}")
 
 
 def main():
-    # setup initial stock of inventory
-    # product_list = [Product("MacBook Air M2", price=1450, quantity=100),
-    #                 Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    #                 Product("Google Pixel 7", price=500, quantity=250)
-    #                 ]
     product_list = [Product("MacBook Air M2", price=1450, quantity=100),
                     Product("Bose QuietComfort Earbuds", price=250, quantity=500),
                     Product("Google Pixel 7", price=500, quantity=250),
@@ -133,7 +128,6 @@ def main():
             break
         else:
             print('Invalid choice')
-
 
 
 if __name__ == '__main__':

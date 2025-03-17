@@ -126,7 +126,7 @@ class Product:
             self.set_quantity(quantity)
             if self._promotion is not None:
                 price_with_promotion = self.promotion.apply_promotion(product=self, quantity=quantity)
-                return round(price_with_promotion)
+                return round(price_with_promotion, 1)
             return quantity * self.price
 
 
@@ -157,7 +157,7 @@ class NonStockedProduct(Product):
     def buy(self, quantity):
         if self._promotion is not None:
             price_with_promotion = self.promotion.apply_promotion(product=self, quantity=quantity)
-            return round(price_with_promotion)
+            return round(price_with_promotion, 1)
         return quantity * self.price
 
 
@@ -177,8 +177,10 @@ class LimitedProduct(Product):
 
     def buy(self, quantity):
         if quantity > self.maximum:
-            return
-        super().buy(quantity)
+            quantity = self.maximum
+            self.set_quantity(quantity)
+            return self.price * quantity, 'Maximum quantity was exceeded'
+        return super().buy(quantity)
 
 
     def _get_print_info(self):

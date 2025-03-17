@@ -114,9 +114,10 @@ class Store:
         for order_item in shopping_list:
             product, quantity = order_item
             item_price = product.buy(quantity)
-            if isinstance(product, LimitedProduct) and item_price is None:
-                return f"Order was partially made. Only 1 item is allowed for the {product.name}"
+            if isinstance(product, LimitedProduct) and isinstance(item_price, tuple):
+                total_price += item_price[0]
+                return f"Order was partially made. Only 1 item is allowed for the {product.name}. Total payment: ${total_price}"
             if item_price is None:
-                return 'Order was partially made.'
+                return f"Order was partially made. Total payment: ${total_price}"
             total_price += item_price
         return total_price
